@@ -20,12 +20,15 @@ const LOG_PREFIX = "[tailor-resume-server]";
  */
 const DEFAULT_GEMINI_MODEL = "gemini-2.5-flash";
 
+/** Tenure figures and employer table live only in `prompts/tailor-resume.ts` — not duplicated here. */
 const TAILOR_SYSTEM_INSTRUCTION = [
   "You are a strictly grounded assistant limited to the information provided in the user message.",
   "In your answers, rely ONLY on the facts from the base resume LaTeX.",
   "You must NOT access or use your own knowledge to add employers, dates, tools, or metrics not present in the resume.",
   "Return a single JSON object matching the response schema exactly. No markdown fences, no text outside the JSON.",
-  "For N+ years in the JD: compute cumulative tenure by summing every Experience role's date range (never use only the Present role as total).",
+  "For N+ years in the JD: follow the user prompt sections “Reference date” and “Authoritative professional experience” exactly; never use only the Present role as total cumulative experience.",
+  "For ATS-style scores: weight keyword fit, structure, and honest bullet evidence vs the JD; do not treat a JD year number alone as the main reason for low fit when substance aligns—see user prompt “JD N+ years vs resume tenure”.",
+  "Tailoring goal: want-vs-have mapping, then a resume so evidence-rich and JD-aligned that reviewers focus on fit and impact rather than calendar years—without inventing tenure.",
 ].join(" ");
 
 const ATS_SCORE_ORIGINAL: ResponseSchema = {
@@ -44,7 +47,7 @@ const ATS_SCORE_ORIGINAL: ResponseSchema = {
     rationale: {
       type: SchemaType.STRING,
       description:
-        "2–4 sentences: keyword fit, structure, honest gaps vs this JD. If JD requires N+ years, use cumulative tenure from all Experience roles (user prompt Step 2)—never only the latest/Present role.",
+        "2–4 sentences: keyword fit, structure, evidence vs this JD. If JD requires N+ years, follow the user prompt authoritative tenure block—never only the Present role. Do not headline “years shortfall” as the main verdict when bullets show strong relevant work; numeric JD vs resume years is secondary to substance per user prompt.",
     },
   },
 };
@@ -65,7 +68,7 @@ const ATS_SCORE_TAILORED: ResponseSchema = {
     rationale: {
       type: SchemaType.STRING,
       description:
-        "2–4 sentences: what you optimized for ATS/JD scan; remaining gaps (honest). For year requirements use cumulative Experience tenure (user prompt Step 2).",
+        "2–4 sentences: what you optimized for ATS/JD scan; remaining honest gaps (tools/skills). Match cumulative tenure to the user prompt authoritative block. Years JD vs resume: nuance or filter risk if needed—not the primary ‘poor fit’ story when evidence is strong.",
     },
   },
 };
@@ -108,10 +111,12 @@ const TAILOR_RESPONSE_SCHEMA: ResponseSchema = {
       type: SchemaType.ARRAY,
       items: { type: SchemaType.STRING },
       description:
-        "Actionable tips for this role (keywords, order, emphasis). No invented experience.",
+        "Actionable tips: skills, impact stories, collaboration, prep for real gaps. Do not center on how to explain years of experience unless one tip is uniquely useful—see user prompt North star and suggestions rules.",
     },
     issues: {
       type: SchemaType.ARRAY,
+      description:
+        "Clear JD gaps with no resume evidence (e.g. missing tools/skills). Per user prompt: do not use issues mainly for “JD asks N years, resume shows M” when bullet substance aligns — that is suggestions/rationale nuance; same for “at or very near” authoritative thresholds.",
       items: {
         type: SchemaType.OBJECT,
         required: ["issue", "whyItMatters"],
