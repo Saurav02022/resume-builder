@@ -62,7 +62,7 @@ function ResumeReviewPageInner() {
           <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-primary">
             Step 2 of 3 — Review
           </p>
-          <h1 className="font-heading text-3xl font-semibold tracking-tight text-foreground">
+          <h1 className="font-heading text-3xl font-bold tracking-tight text-foreground">
             Review what changed
           </h1>
           <p className="text-base leading-relaxed text-muted-foreground">

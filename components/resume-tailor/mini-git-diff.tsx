@@ -49,7 +49,7 @@ export function MiniGitDiff({ before, after, className }: MiniGitDiffProps) {
               className={cn(
                 "flex gap-1 border-b border-border/30 px-2 py-0.5 last:border-b-0",
                 isAdd &&
-                  "bg-emerald-500/15 text-emerald-950 dark:bg-emerald-500/10 dark:text-emerald-100",
+                  "bg-[#1aae39]/15 text-[#0d4d1f] dark:bg-[#1aae39]/12 dark:text-[#b6f0c4]",
                 isRem &&
                   "bg-red-500/12 text-red-950 dark:bg-red-500/10 dark:text-red-100",
                 !isAdd &&

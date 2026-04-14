@@ -28,7 +28,7 @@ export default function ResumeExportPage() {
           <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-primary">
             Step 3 of 3 — Export
           </p>
-          <h1 className="font-heading text-3xl font-semibold tracking-tight text-foreground">
+          <h1 className="font-heading text-3xl font-bold tracking-tight text-foreground">
             Export your resume
           </h1>
           <p className="text-base leading-relaxed text-muted-foreground">

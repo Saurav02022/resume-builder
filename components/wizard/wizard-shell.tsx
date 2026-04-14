@@ -16,13 +16,13 @@ export function WizardShell({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="relative min-h-full bg-background">
-      {/* Ultra-subtle warmth — no purple / no “AI glow” band */}
+      {/* §5 — warm white section alternation feel (very subtle) */}
       <div
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_120%_60%_at_50%_-30%,oklch(0.55_0.06_255/0.06),transparent_55%)]"
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_120%_50%_at_50%_-20%,#f6f5f4,transparent_55%)] dark:bg-[radial-gradient(ellipse_120%_50%_at_50%_-20%,rgba(255,255,255,0.04),transparent_55%)]"
         aria-hidden
       />
 
-      <header className="sticky top-0 z-50 border-b border-border/70 bg-background/90 shadow-sm backdrop-blur-md supports-backdrop-filter:bg-background/85">
+      <header className="sticky top-0 z-50 border-b border-border bg-background/95 shadow-[rgba(0,0,0,0.01)_0px_1px_3px,rgba(0,0,0,0.02)_0px_3px_7px] backdrop-blur-sm supports-backdrop-filter:bg-background/90 dark:shadow-[rgba(0,0,0,0.2)_0px_2px_8px]">
         <div className="mx-auto flex w-full max-w-[min(100%,1920px)] flex-col gap-3 px-4 py-3 sm:px-6 lg:px-8 xl:px-10 2xl:px-12">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <Link
@@ -37,7 +37,7 @@ export function WizardShell({ children }: { children: React.ReactNode }) {
               </span>
               <span className="flex min-w-0 flex-col gap-1">
                 <span className="flex flex-wrap items-center gap-2">
-                  <span className="font-heading text-lg font-semibold tracking-tight text-foreground sm:text-xl">
+                  <span className="font-heading text-lg font-bold tracking-tight text-foreground sm:text-xl">
                     Resume AI Agent
                   </span>
                   <Badge

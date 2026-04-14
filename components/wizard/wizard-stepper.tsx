@@ -16,7 +16,7 @@ export function WizardStepper() {
   return (
     <nav
       aria-label="Workflow steps"
-      className="w-full rounded-2xl border border-border/70 bg-muted/45 p-2 shadow-inner backdrop-blur-sm dark:bg-muted/30 sm:p-1.5"
+      className="w-full rounded-xl border border-border bg-muted p-2 sm:p-1.5"
     >
       {/* Flex row: [step][stretching bar][step][bar][step] — no floating short segments */}
       <div className="flex w-full flex-col gap-3 sm:flex-row sm:items-center sm:gap-0">
@@ -33,7 +33,7 @@ export function WizardStepper() {
                 className={cn(
                   "flex min-w-0 shrink-0 items-center gap-2 rounded-xl px-2.5 py-2 text-xs font-medium transition-all sm:rounded-2xl sm:px-3.5 sm:py-2 sm:text-[13px]",
                   isActive &&
-                    "bg-background text-foreground shadow-sm ring-1 ring-primary/20 dark:ring-primary/30",
+                    "bg-card text-foreground shadow-sm ring-1 ring-primary/18 dark:ring-primary/28",
                   !isActive &&
                     isDone &&
                     "text-foreground hover:bg-background/80",
@@ -49,7 +49,7 @@ export function WizardStepper() {
                       "bg-primary text-primary-foreground shadow-sm",
                     !isActive &&
                       isDone &&
-                      "bg-emerald-500/15 text-emerald-800 dark:text-emerald-300",
+                      "bg-[#1aae39]/15 text-[#1aae39] dark:text-[#4ade80]",
                     !isActive &&
                       !isDone &&
                       "bg-background/80 text-muted-foreground ring-1 ring-border/60"

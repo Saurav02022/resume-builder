@@ -103,7 +103,7 @@ export default function ResumeJobPage() {
         <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-primary">
           Step 1 — Job description
         </p>
-        <h1 className="font-heading text-3xl font-semibold tracking-tight text-foreground">
+        <h1 className="font-heading text-3xl font-bold tracking-tight text-foreground">
           Share the role you are targeting
         </h1>
         <p className="max-w-3xl text-base leading-relaxed text-muted-foreground">
@@ -115,9 +115,9 @@ export default function ResumeJobPage() {
         </p>
       </div>
 
-      <Card className="border-border/80 shadow-sm ring-1 ring-border/50">
+      <Card>
         <CardHeader className="space-y-1 pb-2">
-          <CardTitle className="flex items-center gap-2.5 text-lg font-semibold">
+          <CardTitle className="flex items-center gap-2.5 text-lg font-bold">
             <span className="flex size-9 items-center justify-center rounded-lg bg-primary/10">
               <Sparkles className="size-4 text-primary" aria-hidden />
             </span>

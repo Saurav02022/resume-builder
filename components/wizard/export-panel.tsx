@@ -35,7 +35,7 @@ export function ExportPanel({ data, onError }: ExportPanelProps) {
   return (
     <Card className="border-border/80 shadow-sm ring-1 ring-border/50">
       <CardHeader className="space-y-1">
-        <CardTitle className="text-xl font-semibold">Tailored LaTeX source</CardTitle>
+        <CardTitle className="text-xl font-bold">Tailored LaTeX source</CardTitle>
         <CardDescription className="text-base leading-relaxed">
           Copy the .tex source and use it in Overleaf or locally to generate your final resume.
         </CardDescription>

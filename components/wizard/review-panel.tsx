@@ -85,7 +85,7 @@ function AtsScoreCard({
           <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
             {subtitle}
           </p>
-          <p className="mt-1 font-heading text-lg font-semibold tracking-tight">
+          <p className="mt-1 font-heading text-lg font-bold tracking-tight">
             {title}
           </p>
         </div>
@@ -227,7 +227,7 @@ export function ReviewPanel({
                 <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-primary">
                   ATS-style alignment
                 </p>
-                <h2 className="mt-1 font-heading text-2xl font-semibold tracking-tight">
+                <h2 className="mt-1 font-heading text-2xl font-bold tracking-tight">
                   Original vs tailored
                 </h2>
                 <p className="mt-1 max-w-2xl text-sm leading-relaxed text-muted-foreground">
@@ -241,7 +241,8 @@ export function ReviewPanel({
                     variant={delta > 0 ? "default" : "secondary"}
                     className={cn(
                       "gap-1.5 px-3 py-1 text-sm font-medium",
-                      delta > 0 && "bg-emerald-600 text-white hover:bg-emerald-600/90 dark:bg-emerald-600"
+                      delta > 0 &&
+                        "bg-[#1aae39] text-white hover:bg-[#179a33] dark:bg-[#1aae39]"
                     )}
                   >
                     {delta > 0 ? (
@@ -290,9 +291,9 @@ export function ReviewPanel({
 
           {/* Match summary + glance */}
           <section className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_320px] lg:items-start">
-            <Card className="border-border/80 shadow-sm ring-1 ring-border/40">
+            <Card>
               <CardHeader className="pb-3">
-                <CardTitle className="flex items-center gap-2.5 text-lg font-semibold">
+                <CardTitle className="flex items-center gap-2.5 text-lg font-bold">
                   <span className="flex size-9 items-center justify-center rounded-lg bg-primary/10">
                     <Target className="size-5 text-primary" aria-hidden />
                   </span>
@@ -311,7 +312,7 @@ export function ReviewPanel({
 
             <Card className="border-border/80 bg-muted/30 shadow-inner lg:sticky lg:top-24">
               <CardHeader className="pb-3">
-                <CardTitle className="text-sm font-semibold">This run</CardTitle>
+                <CardTitle className="text-sm font-bold">This run</CardTitle>
                 <CardDescription className="text-xs">
                   Counts from the agent output
                 </CardDescription>
@@ -323,7 +324,7 @@ export function ReviewPanel({
                 </div>
                 <div className="flex items-center justify-between rounded-lg border border-border/60 bg-background/80 px-3 py-2 text-sm">
                   <span className="text-muted-foreground">Fixes applied</span>
-                  <span className="font-medium tabular-nums text-emerald-700 dark:text-emerald-400">
+                  <span className="font-medium tabular-nums text-[#158a32] dark:text-[#4ade80]">
                     {nFixes}
                   </span>
                 </div>
@@ -340,7 +341,7 @@ export function ReviewPanel({
             <section className="space-y-4">
               <div className="flex items-center gap-2">
                 <Lightbulb className="size-5 text-primary" aria-hidden />
-                <h3 className="font-heading text-lg font-semibold tracking-tight">
+                <h3 className="font-heading text-lg font-bold tracking-tight">
                   Tips for this role
                 </h3>
               </div>
@@ -350,7 +351,7 @@ export function ReviewPanel({
                     key={i}
                     className="flex gap-3 rounded-xl border border-border/70 bg-card p-4 shadow-sm ring-1 ring-border/30"
                   >
-                    <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-primary/10 font-heading text-sm font-semibold text-primary">
+                    <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-primary/10 font-heading text-sm font-bold text-primary">
                       {i + 1}
                     </span>
                     <p className="text-sm leading-relaxed text-muted-foreground">
@@ -365,7 +366,7 @@ export function ReviewPanel({
           {/* Issues */}
           {data.issues.length > 0 ? (
             <section className="space-y-4">
-              <h3 className="font-heading text-lg font-semibold tracking-tight">
+              <h3 className="font-heading text-lg font-bold tracking-tight">
                 Gaps vs this JD
               </h3>
               <ul className="space-y-3">
@@ -390,8 +391,8 @@ export function ReviewPanel({
           {data.fixes.length > 0 ? (
             <section className="space-y-4">
               <div className="flex items-center gap-2">
-                <Wrench className="size-5 text-emerald-600 dark:text-emerald-400" />
-                <h3 className="font-heading text-lg font-semibold tracking-tight">
+                <Wrench className="size-5 text-[#1aae39] dark:text-[#4ade80]" />
+                <h3 className="font-heading text-lg font-bold tracking-tight">
                   What we changed
                 </h3>
               </div>
@@ -399,9 +400,9 @@ export function ReviewPanel({
                 {data.fixes.map((row, i) => (
                   <li
                     key={i}
-                    className="rounded-xl border border-emerald-500/30 bg-emerald-500/5 p-4 dark:bg-emerald-500/10"
+                    className="rounded-xl border border-[#1aae39]/30 bg-[#1aae39]/5 p-4 dark:bg-[#1aae39]/10"
                   >
-                    <p className="font-medium leading-snug text-emerald-900 dark:text-emerald-200">
+                    <p className="font-medium leading-snug text-[#0d4d1f] dark:text-[#b6f0c4]">
                       {row.whatChanged}
                     </p>
                     <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
