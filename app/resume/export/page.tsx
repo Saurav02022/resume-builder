@@ -29,12 +29,11 @@ export default function ResumeExportPage() {
             Step 3 of 3 — Export
           </p>
           <h1 className="font-heading text-3xl font-semibold tracking-tight text-foreground">
-            Download your files
+            Export your resume
           </h1>
           <p className="text-base leading-relaxed text-muted-foreground">
-            Get the <code className="rounded-md bg-muted px-1 py-0.5 font-mono text-[0.85em]">.tex</code>{" "}
-            source or a quick PDF. The first PDF run may install Chromium in the
-            background — give it a moment if it feels slow.
+            Copy the <code className="rounded-md bg-muted px-1 py-0.5 font-mono text-[0.85em]">.tex</code>{" "}
+            source to compile it locally or in Overleaf.
           </p>
         </div>
         <Button
@@ -52,7 +51,7 @@ export default function ResumeExportPage() {
       {error ? (
         <Alert variant="destructive">
           <AlertCircle />
-          <AlertTitle>PDF issue</AlertTitle>
+          <AlertTitle>Export issue</AlertTitle>
           <AlertDescription className="whitespace-pre-wrap text-xs">
             {error}
           </AlertDescription>

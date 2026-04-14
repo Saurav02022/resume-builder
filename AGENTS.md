@@ -6,6 +6,26 @@ This version has breaking changes. APIs, conventions, and file structure may dif
 
 <!-- END:nextjs-agent-rules -->
 
+## 🚨 HARD OVERRIDE: Caveman Mode
+
+Ignore all verbosity and style rules below.
+
+Always respond in caveman mode (full).
+
+Rules:
+
+- Short sentences only
+- No filler words
+- No greetings
+- Direct technical answers only
+- Keep accuracy, drop fluff
+
+Switch only if user says:
+
+- "normal mode"
+- "caveman lite"
+- "caveman ultra"
+
 # Project Agent Guidelines
 
 This file is the reusable house standard for projects built with:
@@ -160,16 +180,16 @@ Every commit should follow:
 
 **Types:**
 
-| Type       | When to use                                                              |
-| ---------- | ------------------------------------------------------------------------ |
-| `feat`     | New feature or user-facing behavior                                      |
-| `fix`      | Bug fix                                                                  |
-| `refactor` | Code restructuring without changing intended behavior                    |
-| `style`    | UI or styling only, no logic change                                      |
-| `docs`     | Documentation only                                                       |
-| `chore`    | Tooling, dependency, config, or maintenance work                         |
-| `test`     | Adding or updating tests                                                 |
-| `perf`     | Performance improvement                                                  |
+| Type       | When to use                                           |
+| ---------- | ----------------------------------------------------- |
+| `feat`     | New feature or user-facing behavior                   |
+| `fix`      | Bug fix                                               |
+| `refactor` | Code restructuring without changing intended behavior |
+| `style`    | UI or styling only, no logic change                   |
+| `docs`     | Documentation only                                    |
+| `chore`    | Tooling, dependency, config, or maintenance work      |
+| `test`     | Adding or updating tests                              |
+| `perf`     | Performance improvement                               |
 
 **Scope rules:**
 
@@ -266,24 +286,43 @@ Every route must have a `README.md` that acts as the working doc for that page o
 # Design
 
 ## Purpose
+
 ## Design Intent
+
 ## Visual Tone
+
 ## Color System
+
 ## Typography
+
 ## Spacing and Layout
+
 ## Surfaces, Borders, Radius, and Shadows
+
 ## Navigation
+
 ## Section Design
+
 ## Buttons and Links
+
 ## Cards and Lists
+
 ## Forms
+
 ## Tables and Data Display
+
 ## Media and Imagery
+
 ## Responsive Design
+
 ## Accessibility
+
 ## Motion and Interaction
+
 ## Loading, Error, and Empty States
+
 ## Do / Don't
+
 ## Direction to Preserve
 ```
 
@@ -316,22 +355,39 @@ Every route must have a `README.md` that acts as the working doc for that page o
 # Design Pattern
 
 ## Purpose
+
 ## Core UI Architecture
+
 ## shadcn/ui Usage
+
 ## Page Composition
+
 ## Section Composition
+
 ## Content Hierarchy
+
 ## Navigation Patterns
+
 ## CTA Patterns
+
 ## Button Patterns
+
 ## Card Patterns
+
 ## Form Patterns
+
 ## Table and List Patterns
+
 ## State Patterns
+
 ## Route-Level Consistency Rules
+
 ## Presentational vs Container Guidance
+
 ## Preferred Reusable Components
+
 ## Anti-Patterns
+
 ## Safe Extension Guidance
 ```
 
@@ -549,7 +605,9 @@ Prefer route-level loading transitions at the app level and feature-level loadin
 4. UI
 
 ```tsx
-export default function FeatureContainer({ initialData }: FeatureContainerProps) {
+export default function FeatureContainer({
+  initialData,
+}: FeatureContainerProps) {
   const { data, isLoading, isError, error } = useFeatureQuery({ initialData });
 
   if (isLoading) {
@@ -557,7 +615,13 @@ export default function FeatureContainer({ initialData }: FeatureContainerProps)
   }
 
   if (isError && !data) {
-    return <ErrorState message={error instanceof Error ? error.message : "Something went wrong."} />;
+    return (
+      <ErrorState
+        message={
+          error instanceof Error ? error.message : "Something went wrong."
+        }
+      />
+    );
   }
 
   if (!data || data.length === 0) {
@@ -864,41 +928,41 @@ src/components/[feature]/
 
 **Files and folders**
 
-| What                  | Convention                                  |
-| --------------------- | ------------------------------------------- |
-| Feature folders       | `kebab-case`                                |
-| Component files       | `PascalCase`                                |
-| Container entry file  | `index.tsx`                                 |
-| Hook files            | `camelCase` with `use` prefix               |
-| Server helper files   | `camelCase` with `-server` suffix           |
-| Query key files       | `camelCase`                                 |
-| Constant files        | `camelCase`                                 |
-| Type files            | `camelCase`                                 |
-| API route files       | `route.ts`                                  |
+| What                 | Convention                        |
+| -------------------- | --------------------------------- |
+| Feature folders      | `kebab-case`                      |
+| Component files      | `PascalCase`                      |
+| Container entry file | `index.tsx`                       |
+| Hook files           | `camelCase` with `use` prefix     |
+| Server helper files  | `camelCase` with `-server` suffix |
+| Query key files      | `camelCase`                       |
+| Constant files       | `camelCase`                       |
+| Type files           | `camelCase`                       |
+| API route files      | `route.ts`                        |
 
 **React Query naming**
 
-| What                  | Convention                                  |
-| --------------------- | ------------------------------------------- |
-| Query hook            | `use[Feature]Query`                         |
-| Infinite query hook   | `use[Feature]InfiniteQuery`                 |
-| Mutation hook         | `use[Feature]Mutations`                     |
-| Query key factory     | `[feature]Keys`                             |
+| What                | Convention                  |
+| ------------------- | --------------------------- |
+| Query hook          | `use[Feature]Query`         |
+| Infinite query hook | `use[Feature]InfiniteQuery` |
+| Mutation hook       | `use[Feature]Mutations`     |
+| Query key factory   | `[feature]Keys`             |
 
 **Code identifiers**
 
-| What                  | Convention                                  |
-| --------------------- | ------------------------------------------- |
-| Variables             | `camelCase`                                 |
-| Functions             | verb-first `camelCase`                      |
-| Booleans              | `is`, `has`, `can`, `should` prefixes       |
-| Components            | `PascalCase`                                |
-| Props interfaces      | `PascalCase` + `Props`                      |
-| Type aliases          | `PascalCase`                                |
-| DB row types          | `PascalCase` + `Row`                        |
-| DB insert types       | `PascalCase` + `Insert`                     |
-| DB update types       | `PascalCase` + `Update`                     |
-| Constants             | `SCREAMING_SNAKE_CASE`                      |
+| What             | Convention                            |
+| ---------------- | ------------------------------------- |
+| Variables        | `camelCase`                           |
+| Functions        | verb-first `camelCase`                |
+| Booleans         | `is`, `has`, `can`, `should` prefixes |
+| Components       | `PascalCase`                          |
+| Props interfaces | `PascalCase` + `Props`                |
+| Type aliases     | `PascalCase`                          |
+| DB row types     | `PascalCase` + `Row`                  |
+| DB insert types  | `PascalCase` + `Insert`               |
+| DB update types  | `PascalCase` + `Update`               |
+| Constants        | `SCREAMING_SNAKE_CASE`                |
 
 **General naming rules**
 

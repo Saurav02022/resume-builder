@@ -13,7 +13,6 @@ export const routes = {
   api: {
     resume: {
       tailor: "/api/resume/tailor",
-      compile: "/api/resume/compile",
     },
   },
 } as const;

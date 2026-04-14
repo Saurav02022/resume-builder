@@ -39,7 +39,7 @@ export const WIZARD_STEPS: WizardStepMeta[] = [
     path: routes.resume.export,
     title: "Export",
     shortTitle: "Export",
-    description: "Download files",
+    description: "Export files",
     icon: FileDown,
   },
 ];
