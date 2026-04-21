@@ -6,12 +6,14 @@ export const routes = {
   home: "/",
   /** Resume flow: job posting → review → export */
   resume: {
+    upload: "/resume/upload",
     job: "/resume/job",
     review: "/resume/review",
     export: "/resume/export",
   },
   api: {
     resume: {
+      parse: "/api/resume/parse",
       tailor: "/api/resume/tailor",
     },
   },

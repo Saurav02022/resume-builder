@@ -6,7 +6,7 @@ import { routes } from "@/config/routes";
 /**
  * One entry = one screen. Add a route under `app/resume/` + entry here.
  */
-export type WizardStepId = "job" | "review" | "export";
+export type WizardStepId = "upload" | "job" | "review" | "export";
 
 export type WizardStepMeta = {
   id: WizardStepId;
@@ -18,6 +18,14 @@ export type WizardStepMeta = {
 };
 
 export const WIZARD_STEPS: WizardStepMeta[] = [
+  {
+    id: "upload",
+    path: routes.resume.upload,
+    title: "Upload resume",
+    shortTitle: "Upload",
+    description: "PDF/DOCX sourcing",
+    icon: Sparkles, 
+  },
   {
     id: "job",
     path: routes.resume.job,

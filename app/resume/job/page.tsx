@@ -6,25 +6,15 @@
  */
 
 import { useRouter } from "next/navigation";
-import { useCallback, useState } from "react";
-import { AlertCircle, Loader2, Sparkles } from "lucide-react";
+import { useCallback, useState, useEffect } from "react";
+import { FileText, Loader2, Sparkles, AlertCircle } from "lucide-react";
 
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
+import { WizardInputCard } from "@/components/wizard/wizard-input-card";
 import { apiRoutes, routes } from "@/config/routes";
-import { wizardTextBlockHeightClass } from "@/config/wizard-ui";
 import { useWizardStore } from "@/store/wizard-store";
 import type { TailorResumeData } from "@/types/resume-tailor";
-import { cn } from "@/lib/utils";
 
 const LOG_PREFIX = "[resume/job]";
 const FLOW = "[tailor-flow]";
@@ -33,13 +23,17 @@ export default function ResumeJobPage() {
   const router = useRouter();
   const jd = useWizardStore((s) => s.jd);
   const tailorData = useWizardStore((s) => s.tailorData);
+  const originalText = useWizardStore((s) => s.originalText);
+  const originalFileName = useWizardStore((s) => s.originalFileName);
+
   const setJd = useWizardStore((s) => s.setJd);
+  const setOriginalText = useWizardStore((s) => s.setOriginalText);
   const setTailorData = useWizardStore((s) => s.setTailorData);
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const canGenerate = jd.trim().length >= 40;
+  const canGenerate = jd.trim().length >= 40 && originalText.length > 50;
 
   const runTailor = useCallback(async () => {
     setError(null);
@@ -48,7 +42,7 @@ export default function ResumeJobPage() {
     const jdChars = jd.trim().length;
     console.info(
       FLOW,
-      "client · Generate clicked → will POST JSON { jd } to Next.js API"
+      "client · Generate clicked → will POST JSON { resume_text, jd } to Next.js API"
     );
     console.info(LOG_PREFIX, "tailor started", { jdChars, endpoint: apiRoutes.resume.tailor });
     try {
@@ -61,7 +55,7 @@ export default function ResumeJobPage() {
       const res = await fetch(apiRoutes.resume.tailor, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ jd }),
+        body: JSON.stringify({ resume_text: originalText, jd }),
       });
       console.info(FLOW, "client · fetch response", { httpStatus: res.status });
       const json = (await res.json()) as
@@ -95,101 +89,109 @@ export default function ResumeJobPage() {
     } finally {
       setLoading(false);
     }
-  }, [jd, router, setTailorData]);
+  }, [jd, originalText, router, setTailorData]);
+
+  // Security layer: enforce sequence via useEffect to avoid "render phase update" error
+  useEffect(() => {
+    if (!originalText) {
+      console.warn("No parsed resume context in memory. Kicking user to upload step.");
+      router.replace(routes.resume.upload);
+    }
+  }, [originalText, router]);
+
+  if (!originalText) {
+    return null;
+  }
 
   return (
     <div className="space-y-8">
       <div className="space-y-3">
         <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-primary">
-          Step 1 — Job description
+          Step 2 of 4 — Job description
         </p>
         <h1 className="font-heading text-3xl font-bold tracking-tight text-foreground">
-          Share the role you are targeting
+          Reference your resume & paste the role
         </h1>
-        <p className="max-w-3xl text-base leading-relaxed text-muted-foreground">
-          Paste the full posting. We tailor{" "}
+        <p className="max-w-3xl text-sm leading-relaxed text-muted-foreground sm:text-base">
+          We&apos;ve extracted the text from{" "}
           <code className="rounded-md bg-muted px-1.5 py-0.5 font-mono text-[0.85em] text-foreground">
-            public/original-resume.tex
-          </code>{" "}
-          to this JD, then walk you through diff, ATS-style score, and export.
+            {originalFileName || "your file"}
+          </code>. 
+          Use the preview below to ensure we have the right context while you paste the target JD.
         </p>
       </div>
 
-      <Card>
-        <CardHeader className="space-y-1 pb-2">
-          <CardTitle className="flex items-center gap-2.5 text-lg font-bold">
-            <span className="flex size-9 items-center justify-center rounded-lg bg-primary/10">
-              <Sparkles className="size-4 text-primary" aria-hidden />
-            </span>
-            Job description
-          </CardTitle>
-          <CardDescription className="text-base leading-relaxed">
-            At least 40 characters so the agent has enough context. One click
-            runs the full tailor pass.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-5 pt-2">
-          <div className="space-y-2">
-            <Label htmlFor="resume-job-jd">Posting text</Label>
-            <Textarea
-              id="resume-job-jd"
-              value={jd}
-              onChange={(e) => setJd(e.target.value)}
-              placeholder="Role, responsibilities, tech stack, must-haves…"
-              rows={12}
-              className={cn(
-                "field-sizing-fixed resize-none overflow-y-auto font-mono text-sm leading-relaxed",
-                wizardTextBlockHeightClass
-              )}
-            />
-          </div>
+      <div className="grid gap-6 lg:grid-cols-2 xl:gap-8">
+        <WizardInputCard
+          id="resume-base-text"
+          title="Your Resume Base"
+          description={`Extracted from ${originalFileName || "your file"}. Feel free to edit or paste updates.`}
+          label="Source text"
+          value={originalText}
+          onChange={setOriginalText}
+          placeholder="Paste your resume text here if extraction was imperfect..."
+          icon={FileText}
+          variant="muted"
+          disabled={loading}
+        />
 
-          {error ? (
-            <Alert variant="destructive">
-              <AlertCircle />
-              <AlertTitle>Could not generate</AlertTitle>
-              <AlertDescription className="whitespace-pre-wrap font-mono text-xs">
-                {error}
-              </AlertDescription>
-            </Alert>
-          ) : null}
+        <div className="flex flex-col gap-4">
+          <WizardInputCard
+            id="resume-job-jd"
+            title="Target Job Description"
+            description="Paste the full posting below. We require at least 40 characters for the AI to provide a high-quality tailoring pass."
+            label="Posting text"
+            value={jd}
+            onChange={setJd}
+            placeholder="Role, responsibilities, tech stack, must-haves…"
+            icon={Sparkles}
+            disabled={loading}
+          />
 
-          <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
-            <div className="space-y-1">
-              <p className="text-xs text-muted-foreground">
-                {jd.trim().length} characters
-                {!canGenerate ? " · add a bit more text" : ""}
-              </p>
-              {tailorData && !loading ? (
-                <p className="text-xs text-muted-foreground">
-                  You already have a tailored run in this session.{" "}
-                  <strong className="font-medium text-foreground">
-                    Generate again
-                  </strong>{" "}
-                  replaces it — there is no separate version history.
+          <div className="flex flex-col gap-4 px-1">
+            {error ? (
+              <Alert variant="destructive">
+                <AlertCircle />
+                <AlertTitle>Could not generate</AlertTitle>
+                <AlertDescription className="whitespace-pre-wrap font-mono text-xs">
+                  {error}
+                </AlertDescription>
+              </Alert>
+            ) : null}
+
+            <div className="flex flex-col gap-4 border-t pt-4 sm:flex-row sm:items-center sm:justify-between">
+              <div className="space-y-1">
+                <p className="text-[11px] font-medium text-muted-foreground">
+                  {jd.trim().length} characters
+                  {!canGenerate ? " · please add more detail" : ""}
                 </p>
-              ) : null}
+                {tailorData && !loading ? (
+                  <p className="text-[10px] leading-tight text-muted-foreground">
+                    Regenerating will replace your current tailored version.
+                  </p>
+                ) : null}
+              </div>
+              <Button
+                type="button"
+                disabled={!canGenerate || loading}
+                onClick={() => void runTailor()}
+                className="h-11 gap-2 px-8 shadow-md transition-all hover:shadow-lg active:scale-[0.98]"
+              >
+                {loading ? (
+                  <Loader2 className="size-4 animate-spin" />
+                ) : (
+                  <Sparkles className="size-4" />
+                )}
+                {loading
+                  ? "Generating…"
+                  : tailorData
+                    ? "Update Tailoring"
+                    : "Start Tailoring"}
+              </Button>
             </div>
-            <Button
-              type="button"
-              disabled={!canGenerate || loading}
-              onClick={() => void runTailor()}
-              className="gap-2 px-6 shadow-sm"
-            >
-              {loading ? (
-                <Loader2 className="size-4 animate-spin" />
-              ) : (
-                <Sparkles className="size-4" />
-              )}
-              {loading
-                ? "Generating…"
-                : tailorData
-                  ? "Regenerate tailored resume"
-                  : "Generate tailored resume"}
-            </Button>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </div>
   );
 }

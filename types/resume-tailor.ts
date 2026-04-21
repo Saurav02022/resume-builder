@@ -40,6 +40,10 @@ export type TailorResumeData = {
   issues: ResumeIssue[];
   fixes: ResumeFix[];
   tailoredTex: string;
+  candidateName?: string;
+  targetCompany?: string;
+  targetRole?: string;
+  targetLocation?: string;
 };
 
 export type ApiSuccessResponse<T> = {

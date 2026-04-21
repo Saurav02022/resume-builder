@@ -1,18 +1,12 @@
-import { readFile } from "node:fs/promises";
-import { join } from "node:path";
+import type { ApiResponse } from "@/types/resume-tailor";
 
-import { tailorResumeWithGemini } from "@/lib/tailor-resume";
-import type { ApiResponse, TailorResumeData } from "@/types/resume-tailor";
-
-const LOG_PREFIX = "[api/resume/tailor]";
 const FLOW = "[tailor-flow]";
 
 export const runtime = "nodejs";
+export const maxDuration = 300; // Timeout set to 300 seconds (5 minutes)
 
-/**
- * POST body: `{ jd: string }`.
- * Loads the full base file from disk, forwards it with the JD to Gemini (`lib/tailor-resume`), returns structured JSON.
- */
+const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "http://127.0.0.1:8000";
+
 export async function POST(request: Request): Promise<Response> {
   console.info(FLOW, "api · POST /api/resume/tailor received");
 
@@ -20,85 +14,69 @@ export async function POST(request: Request): Promise<Response> {
   try {
     body = await request.json();
   } catch {
-    console.warn(FLOW, "api FAILED · invalid JSON body");
-    console.warn(LOG_PREFIX, "reject: invalid JSON body");
     return jsonError(400, "INVALID_JSON", "Request body must be JSON");
   }
 
   const jd =
-    typeof body === "object" &&
-    body !== null &&
-    "jd" in body &&
-    typeof (body as { jd: unknown }).jd === "string"
-      ? (body as { jd: string }).jd.trim()
+    typeof body === "object" && body !== null && "jd" in body && typeof (body as Record<string, unknown>).jd === "string"
+      ? (body as Record<string, string>).jd.trim()
       : "";
 
-  console.info(FLOW, "api · JSON body parsed", { jdChars: jd.length });
+  const resume_text =
+    typeof body === "object" && body !== null && "resume_text" in body && typeof (body as Record<string, unknown>).resume_text === "string"
+      ? (body as Record<string, string>).resume_text.trim()
+      : "";
 
   if (!jd || jd.length < 40) {
-    console.warn(FLOW, "api FAILED · JD too short", { jdChars: jd.length });
-    console.warn(LOG_PREFIX, "reject: invalid JD", { jdChars: jd.length });
-    return jsonError(
-      400,
-      "INVALID_JD",
-      "Paste a job description (at least a few lines, min ~40 characters)."
-    );
+    return jsonError(400, "INVALID_JD", "Paste a job description (min ~40 chars).");
   }
 
-  if (jd.length > 80_000) {
-    console.warn(FLOW, "api FAILED · JD too long", { jdChars: jd.length });
-    console.warn(LOG_PREFIX, "reject: JD too long", { jdChars: jd.length });
-    return jsonError(400, "JD_TOO_LONG", "Job description is too long.");
+  if (!resume_text) {
+    return jsonError(400, "INVALID_RESUME", "Original resume text is missing.");
   }
 
-  const basePath = join(process.cwd(), "public", "original-resume.tex");
-  let baseResumeTex: string;
-  try {
-    baseResumeTex = await readFile(basePath, "utf-8");
-  } catch (e) {
-    console.error(FLOW, "api FAILED · cannot read base resume", { basePath });
-    console.error(LOG_PREFIX, "could not read base resume", { basePath }, e);
-    return jsonError(
-      500,
-      "BASE_RESUME_MISSING",
-      "Could not read public/original-resume.tex"
-    );
-  }
-
-  console.info(FLOW, "api · JD validated", { jdChars: jd.length });
-  console.info(FLOW, "api · base resume loaded from disk", {
-    path: "public/original-resume.tex",
-    chars: baseResumeTex.length,
-  });
-  console.info(
-    FLOW,
-    "api · invoking tailorResumeWithGemini (Gemini SDK inside)"
-  );
+  console.info(FLOW, "api · forwarding to FastAPI backend");
 
   try {
-    const data: TailorResumeData = await tailorResumeWithGemini(
-      baseResumeTex,
-      jd
-    );
-    console.info(FLOW, "api · tailor OK; responding 200 JSON to client", {
-      tailoredTexChars: data.tailoredTex.length,
-      fixesCount: data.fixes?.length ?? 0,
+    const response = await fetch(`${BACKEND_URL}/api/resume/tailor`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        resume_text,
+        jd
+      })
     });
-    console.info(LOG_PREFIX, "tailor ok", {
-      tailoredTexChars: data.tailoredTex.length,
-      fixesCount: data.fixes?.length ?? 0,
-    });
-    const res: ApiResponse<TailorResumeData> = {
-      success: true,
-      data,
-      message: "Tailored resume generated",
-    };
-    return Response.json(res);
+
+    if (!response.ok) {
+      throw new Error(`Backend responded with status: ${response.status}`);
+    }
+
+    const result = await response.json();
+    
+    // Map backend snake_case to frontend camelCase
+    if (result.success && result.data) {
+      const backendData = result.data;
+      const mappedData = {
+        ...backendData,
+        tailoredTex: backendData.tailored_tex,
+        atsScores: backendData.ats_comparison,
+        candidateName: backendData.candidate_name,
+        targetCompany: backendData.target_company,
+        targetRole: backendData.target_role,
+        targetLocation: backendData.target_location,
+      };
+
+      return Response.json({
+        success: true,
+        data: mappedData,
+      });
+    }
+
+    return Response.json(result);
   } catch (e) {
-    const message = e instanceof Error ? e.message : "Tailor failed";
-    console.error(FLOW, "api FAILED · tailorResumeWithGemini threw", message);
-    console.error(LOG_PREFIX, "tailor failed", message, e);
-    return jsonError(500, "TAILOR_FAILED", message, e);
+    const message = e instanceof Error ? e.message : "Proxy failed";
+    console.error(FLOW, "api FAILED · Proxy to FastAPI backend threw", message);
+    return jsonError(500, "PROXY_FAILED", message, e);
   }
 }
 

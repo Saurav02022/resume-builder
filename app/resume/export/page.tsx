@@ -26,14 +26,14 @@ export default function ResumeExportPage() {
       <div className="flex flex-wrap items-start justify-between gap-4 border-b border-border/80 pb-8">
         <div className="max-w-3xl space-y-3">
           <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-primary">
-            Step 3 of 3 — Export
+            Step 4 of 4 — Export
           </p>
           <h1 className="font-heading text-3xl font-bold tracking-tight text-foreground">
-            Export your resume
+            Download your tailored resume
           </h1>
-          <p className="text-base leading-relaxed text-muted-foreground">
-            Copy the <code className="rounded-md bg-muted px-1 py-0.5 font-mono text-[0.85em]">.tex</code>{" "}
-            source to compile it locally or in Overleaf.
+          <p className="max-w-2xl text-base leading-relaxed text-muted-foreground">
+            Your resume is ready in industry-standard formats. Use the 
+            Word (.docx) version for final tweaks or Print to PDF for a production-ready file.
           </p>
         </div>
         <Button

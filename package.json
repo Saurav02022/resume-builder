@@ -6,7 +6,11 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "backend": "cd backend && ./start.sh",
     "lint": "eslint"
+  },
+  "engines": {
+    "node": ">=20.0.0"
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.1",

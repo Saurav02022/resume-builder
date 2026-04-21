@@ -1,0 +1,10 @@
+fastapi==0.115.*
+uvicorn==0.32.*
+google-genai==1.3.*
+pydantic==2.9.*
+pdfminer.six==20240706
+python-multipart==0.0.*
+python-docx==1.1.*
+markdown==3.7.*
+beautifulsoup4==4.12.*
+python-dotenv==1.0.*
