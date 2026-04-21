@@ -5,7 +5,7 @@ const FLOW = "[tailor-flow]";
 export const runtime = "nodejs";
 export const maxDuration = 300; // Timeout set to 300 seconds (5 minutes)
 
-const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "http://127.0.0.1:8000";
+const BACKEND_URL = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000";
 
 export async function POST(request: Request): Promise<Response> {
   console.info(FLOW, "api · POST /api/resume/tailor received");
