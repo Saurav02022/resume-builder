@@ -1,13 +1,16 @@
-name: Production Deployment
+name: Deploy Backend (GCP)
 
 on:
   push:
     branches:
       - main
+    paths:
+      - 'backend/**'
+      - '.github/workflows/deploy-backend.yml'
 
 jobs:
-  deploy-backend:
-    name: Build & Deploy Backend (GCP)
+  deploy:
+    name: Build & Deploy
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
@@ -37,26 +40,3 @@ jobs:
             --set-env-vars "GEMINI_API_KEY=${{ secrets.GEMINI_API_KEY }},GEMINI_MODEL=${{ secrets.GEMINI_MODEL }}" \
             --allow-unauthenticated \
             --project ${{ secrets.GCP_PROJECT_ID }}
-
-  deploy-frontend:
-    name: Deploy Frontend (Vercel)
-    runs-on: ubuntu-latest
-    needs: deploy-backend
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
-
-      - name: Install Vercel CLI
-        run: npm install --global vercel@latest
-
-      - name: Pull Vercel Environment Information
-        run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
-
-      - name: Build Project Artifacts
-        run: |
-          # Inject production backend URL during build
-          echo "NEXT_PUBLIC_API_URL=https://resume-builder-backend-1090870958819.us-central1.run.app" >> .env.production
-          vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
-
-      - name: Deploy Project Artifacts to Vercel
-        run: vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}

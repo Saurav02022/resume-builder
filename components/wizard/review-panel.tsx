@@ -166,7 +166,7 @@ export function ReviewPanel({
                   </AlertDescription>
                 </Alert>
               ) : (
-                <Alert variant="secondary" className="border-border">
+                <Alert variant="default" className="border-border">
                   <AlertTitle className="text-muted-foreground">What moved</AlertTitle>
                   <AlertDescription className="text-sm text-muted-foreground italic">
                     Regenerate to refresh analysis.
