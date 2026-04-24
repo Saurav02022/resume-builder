@@ -11,7 +11,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { cn } from "@/lib/utils";
+import { apiRoutes } from "@/config/routes";
 import type { TailorResumeData } from "@/types/resume-tailor";
 
 type ExportPanelProps = {
@@ -32,14 +32,30 @@ export function ExportPanel({ data, onError }: ExportPanelProps) {
     return `${rawName}+${rawCompany}+${rawRole}+${rawLocation}`
       .replace(/\s+/g, "+")
       .replace(/[^\w+]/g, "")
-      + ".tex";
+      + ".pdf";
   }, [data]);
 
-  const handleDownloadTex = useCallback(async () => {
+  const handleDownloadPdf = useCallback(async () => {
     setIsDownloading(true);
     try {
       const filename = constructFilename();
-      const blob = new Blob([data.tailoredTex], { type: "text/plain" });
+      const response = await fetch(apiRoutes.resume.download, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          latex: data.tailoredTex,
+          filename,
+        }),
+      });
+
+      if (!response.ok) {
+        const payload = await response.json().catch(() => null);
+        const error = payload?.error;
+        const details = error?.details ? `\n\n${error.details}` : "";
+        throw new Error(`${error?.message || "PDF download failed"}${details}`);
+      }
+
+      const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
@@ -77,7 +93,7 @@ export function ExportPanel({ data, onError }: ExportPanelProps) {
                 Export Resume
               </CardTitle>
               <CardDescription className="text-sm leading-relaxed">
-                Download your tailored LaTeX source code.
+                Copy the tailored LaTeX or compile it into a PDF.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -87,21 +103,21 @@ export function ExportPanel({ data, onError }: ExportPanelProps) {
                     <FileCode className="size-5" />
                   </div>
                   <div className="space-y-1">
-                    <p className="font-semibold text-foreground">LaTeX Source (.tex)</p>
+                    <p className="font-semibold text-foreground">LaTeX to PDF</p>
                     <p className="text-xs text-muted-foreground">
-                      Best for compiling to PDF using Overleaf or a local LaTeX distribution.
+                      Compile the generated LaTeX into a ready-to-share PDF.
                     </p>
                   </div>
                 </div>
                 <div className="mt-6 flex flex-col gap-3">
                   <Button
-                    onClick={handleDownloadTex}
+                    onClick={handleDownloadPdf}
                     disabled={isDownloading}
                     className="w-full gap-2 shadow-sm"
                     size="lg"
                   >
                     {isDownloading ? <Loader2 className="size-4 animate-spin" /> : <FileDown className="size-4" />}
-                    Download .tex File
+                    {isDownloading ? "Compiling..." : "Download PDF"}
                   </Button>
                   <Button
                     onClick={copyTex}
@@ -109,7 +125,7 @@ export function ExportPanel({ data, onError }: ExportPanelProps) {
                     className="w-full gap-2 shadow-sm"
                   >
                     {isCopied ? <Check className="size-4 text-green-600" /> : <Copy className="size-4" />}
-                    {isCopied ? "Copied to Clipboard!" : "Copy Code"}
+                    {isCopied ? "Copied" : "Copy LaTeX"}
                   </Button>
                 </div>
               </div>

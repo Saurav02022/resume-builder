@@ -78,7 +78,7 @@ class CompareRequest(BaseModel):
     jd: str
 
 class DownloadRequest(BaseModel):
-    resume_markdown: str
+    latex: str
     filename: Optional[str] = None
 
 class ApiResponse(BaseModel):

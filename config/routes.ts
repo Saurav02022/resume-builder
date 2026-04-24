@@ -15,6 +15,7 @@ export const routes = {
     resume: {
       parse: "/api/resume/parse",
       tailor: "/api/resume/tailor",
+      download: "/api/resume/download",
     },
   },
 } as const;

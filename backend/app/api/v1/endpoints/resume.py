@@ -1,9 +1,11 @@
 from fastapi import APIRouter, UploadFile, File
+from fastapi.responses import JSONResponse, Response
 import logging
 
-from app.models.resume import ScoreRequest, TailorRequest, CompareRequest, ApiResponse
+from app.models.resume import ScoreRequest, TailorRequest, CompareRequest, DownloadRequest, ApiResponse
 from app.services.ai.orchestrator import tailor_orchestrator
 from app.services.ai.scorer import resume_scorer
+from app.services.document.pdf_compiler import PdfCompileError, compile_latex_to_pdf, sanitize_jobname
 from app.services.document.parser import parse_pdf_to_text, parse_docx_to_text
 
 router = APIRouter()
@@ -39,3 +41,42 @@ async def create_tailored_resume(request: TailorRequest):
         return ApiResponse(success=True, data=data)
     except Exception as e:
         return ApiResponse(success=False, error={"code": "TAILOR_FAILED", "message": str(e)})
+
+@router.post("/download")
+async def download_pdf(request: DownloadRequest):
+    filename = f"{sanitize_jobname(request.filename)}.pdf"
+
+    try:
+        compiled_pdf = compile_latex_to_pdf(request.latex, filename)
+        return Response(
+            content=compiled_pdf.content,
+            media_type="application/pdf",
+            headers={
+                "Content-Disposition": f'attachment; filename="{filename}"',
+            },
+        )
+    except PdfCompileError as e:
+        return JSONResponse(
+            status_code=500,
+            content={
+                "success": False,
+                "error": {
+                    "code": "PDF_COMPILE_FAILED",
+                    "message": str(e),
+                    "details": e.details,
+                },
+            },
+        )
+    except Exception as e:
+        logger.exception("Unexpected PDF compile failure")
+        return JSONResponse(
+            status_code=500,
+            content={
+                "success": False,
+                "error": {
+                    "code": "PDF_COMPILE_FAILED",
+                    "message": "LaTeX compile failed.",
+                    "details": str(e),
+                },
+            },
+        )
