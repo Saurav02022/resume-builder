@@ -1,91 +1,128 @@
 # Resume builder
 
-Next.js app that tailors a **fixed LaTeX resume** to a pasted **job description** using **Google Gemini**, then lets you **review changes** (diff + ATS-style analysis) and **export** `.tex` / PDF.
+Personal **full-stack** project: a **Next.js** wizard uploads a resume (PDF/DOCX), pastes a **job description**, gets **Gemini-powered** tailoring against a **fixed LaTeX base**, then **reviews** a diff + ATS-style hints and **exports** LaTeX / PDF.
 
-**Base file:** `public/original-resume.tex` (read on the server for each tailor run).
+**What you’re looking at**
 
-## Flow
+| Layer | Role |
+| ----- | ---- |
+| **Frontend** | App Router UI under `app/resume/*`, wizard shell in `components/wizard/`, client state in `store/wizard-store.ts` (persisted to `sessionStorage`). |
+| **BFF (Next)** | `app/api/resume/*` routes **proxy** parse / tailor / download to the **Python FastAPI** service (`NEXT_PUBLIC_API_URL`, default `http://127.0.0.1:8000`). |
+| **Backend** | `backend/` — document parse, Gemini orchestration, PDF pipeline. Runbook: **`backend/README.md`**. |
+
+**Base LaTeX asset:** `public/original-resume.tex` (also mirrored under `e2e/fixtures/resume/` for tests). The backend may ship its own copy for jobs; keep them in sync when the template changes.
+
+---
+
+## User flow (routes)
 
 | Step | Route | What happens |
 | ---- | ----- | ------------ |
-| 1 | `/resume/job` | Paste JD → **Generate** calls the tailor API → stores result in session |
-| 2 | `/resume/review` | Git-style diff, suggestions, model “ATS-style” before/after scores |
-| 3 | `/resume/export` | Download / compile |
+| 1 | `/resume/upload` | User picks PDF/DOCX → **parse** via API → text stored for tailoring |
+| 2 | `/resume/job` | Paste JD → **Generate** → **tailor** API → result stored in session |
+| 3 | `/resume/review` | Diff, suggestions, model “ATS-style” style signals |
+| 4 | `/resume/export` | Copy `.tex` / download **PDF** (download still goes through Next → backend) |
 
-`/` redirects to **`/resume/job`**.
+**`/``** redirects to **`/resume/upload`** (`app/page.tsx`).
 
-State lives in **Zustand** persisted to **`sessionStorage`** (`jd`, `tailorData`). Regenerating **replaces** the current tailored run (no built-in version history).
+Pathnames live in **`config/routes.ts`**. Deeper wizard behaviour, guards, and **E2E inventory**: **`components/wizard/README.md`**.
+
+---
 
 ## Requirements
 
-- Node 18+
-- **`NEXT_PUBLIC_GEMINI_API_KEY`** in `.env.local`
-- **PDF (compile):** [Puppeteer](https://pptr.dev/) bundles Chromium; first run may download it. The in-app PDF is a **monospace print** of the `.tex` source, not full LaTeX typesetting — for print-perfect PDF use **Overleaf** with the downloaded `.tex`.
+- **Node.js 20+** (see `package.json` `engines`)
+- **npm** for the frontend
+- **Python 3.11+** and backend deps if you run tailoring/parse/PDF locally — see `backend/README.md`
 
-## Setup
+---
 
-```bash
-npm install
-```
+## Environment (frontend)
 
-Create **`.env.local`**:
+Create **`.env.local`** for Next (see **`.env.example`** for optional OAuth-related vars used elsewhere in the template).
 
-```bash
-NEXT_PUBLIC_GEMINI_API_KEY=your_key
-# optional — see "Gemini model" below
-# GEMINI_MODEL=gemini-2.5-pro
-```
+| Variable | Purpose |
+| -------- | ------- |
+| **`NEXT_PUBLIC_API_URL`** | Base URL of the FastAPI backend (e.g. `http://127.0.0.1:8000` locally, or your Cloud Run URL in production). Omit only if you rely on the default in code. |
 
-### Gemini model
+**Gemini / models** for the live tailor path are configured on the **backend** (`GEMINI_API_KEY`, `GEMINI_MODEL` — see `backend/.env.example` and `backend/README.md`). The repo still contains **`lib/tailor-resume.ts`** + **`prompts/tailor-resume.ts`** as TypeScript prompt / schema helpers; production traffic for parse/tailor/download is intended to go through the **proxied FastAPI** stack when the backend is running.
 
-Tailoring uses the **Google Generative AI** SDK with **[structured JSON output](https://ai.google.dev/gemini-api/docs/structured-output)** (`responseMimeType: application/json` + `responseSchema`). Generation uses a **low temperature** and **high `maxOutputTokens`** so analysis + full `tailoredTex` are less likely to truncate or drift.
+---
 
-**Default:** **`gemini-2.5-flash`** if `GEMINI_MODEL` is unset.
-
-| Situation | Set `GEMINI_MODEL` to… |
-| --------- | ----------------------- |
-| **Stronger reasoning / quality** | `gemini-2.5-pro` |
-| **Newest Pro preview** (if your key supports it) | `gemini-3.1-pro-preview` |
-| **Legacy** | `gemini-2.0-flash` — [deprecated](https://ai.google.dev/gemini-api/docs/deprecations) |
-
-Full list: [Gemini models](https://ai.google.dev/gemini-api/docs/models).
-
-## Scripts
+## Scripts (frontend)
 
 | Command | Description |
 | ------- | ----------- |
-| `npm run dev` | Dev server ([http://localhost:3000](http://localhost:3000) → `/resume/job`) |
-| `npm run build` | Production build |
-| `npm run start` | Production server |
+| `npm run dev` | Dev server → [http://localhost:3000](http://localhost:3000) (home → upload) |
+| `npm run build` / `npm run start` | Production build / server |
 | `npm run lint` | ESLint |
+| `npm run e2e` | **Playwright** suite (`e2e/specs/`) — Chromium, starts `npm run dev` unless `PLAYWRIGHT_BASE_URL` is set |
+| `npm run e2e:ui` / `npm run e2e:headed` / `npm run e2e:report` | Local debugging helpers |
 
-## API (internal)
+---
 
-| Method | Path | Body | Notes |
-| ------ | ---- | ---- | ----- |
-| `POST` | `/api/resume/tailor` | `{ "jd": string }` (min ~40 chars) | Reads `public/original-resume.tex`; returns structured JSON: `tailoredTex`, `comparisonSummary`, `atsScores`, `suggestions`, `issues`, `fixes`, etc. |
-| `POST` | `/api/resume/compile` | `{ "tex": string }` | PDF binary (Puppeteer) or JSON error |
+## API surface (what the browser calls)
 
-All app pathnames (pages + API) are centralized in **`config/routes.ts`**.
+Same-origin **`POST`** handlers under **`/api/resume/*`** (implemented in `app/api/resume/`). They validate input and **forward** to the backend where noted.
 
-## Project layout (short)
+| Path | Notes |
+| ---- | ----- |
+| **`/api/resume/parse`** | Multipart file → proxied parse |
+| **`/api/resume/tailor`** | JSON `{ jd, resume_text }` → proxied tailor |
+| **`/api/resume/download`** | JSON `{ latex, filename }` → proxied PDF |
 
-| Area | Path |
-| ---- | ---- |
-| Resume wizard pages | `app/resume/` (`job`, `review`, `export`) + `layout.tsx` (shell / stepper) |
-| Tailor + Gemini | `lib/tailor-resume.ts`, `prompts/tailor-resume.ts` |
-| PDF rendering | `lib/render-resume-pdf-puppeteer.ts` (and compile route) |
-| Client state | `store/wizard-store.ts` |
-| Step config (stepper labels) | `config/wizard-steps.ts` |
-| Types | `types/resume-tailor.ts` |
+---
+
+## Testing (E2E)
+
+- **Framework:** Playwright (`playwright.config.ts`).
+- **Important:** Most wizard specs **`page.route`** the same `/api/resume/*` URLs and return **fixtures** from `e2e/mocks/` — they assert **UI + client contracts**, not your live Python service. That keeps CI deterministic without standing up Gemini in GitHub Actions.
+- **Fixtures:** `e2e/fixtures/` (resume + JD text), **`e2e/helpers/`** (mocks, shared navigation).
+
+---
+
+## CI / deploy (GitHub Actions)
+
+| Workflow | When it runs | Intent |
+| -------- | ------------- | ------ |
+| **`e2e-playwright.yml`** | Push to **`main`** (and manual dispatch) | Install deps, run **`npm run e2e`**, upload HTML report artifact |
+| **`deploy-frontend.yml`** | After **E2E Playwright** completes **successfully** on `main` (`workflow_run`), plus **manual** `workflow_dispatch` | Vercel production deploy for the **same commit SHA** that passed E2E; path gate skips **backend-only** commits (same idea as the old `paths-ignore`) |
+| **`deploy-backend.yml`** | Push to **`main`** when **`backend/**`** (or that workflow file) changes | **Not** gated on Playwright — E2E does not exercise the Python service |
+
+If **Vercel Git integration** also auto-deploys on every push, you can get a **second** deploy channel next to this Action; align dashboard settings with “deploy only after CI” if you want a single front door.
+
+---
+
+## Repo layout (high level)
+
+| Path | Contents |
+| ---- | -------- |
+| `app/` | App Router: `page.tsx`, `resume/*` wizard, `api/resume/*` proxies |
+| `components/` | `wizard/` UI, `resume-tailor/`, shadcn `ui/` |
+| `config/` | Routes, stepper config, UI constants |
+| `store/` | Zustand wizard store |
+| `hooks/` | e.g. `use-wizard-guard` |
+| `types/` | Shared TS types (`resume-tailor`, env) |
+| `lib/` | Small shared utilities + tailor helpers |
+| `prompts/` | Tailor prompt text / schema direction (TS) |
+| `e2e/` | Playwright **specs**, **helpers**, **fixtures**, **mocks** |
+| `backend/` | FastAPI service (Dockerfile, `requirements.txt`, services) |
+| `public/` | Static assets served by Next (`original-resume.tex`, icons) |
+| `.github/workflows/` | E2E, Vercel deploy, GCP backend deploy |
+
+---
+
+## Product notes
+
+- **ATS-style numbers** in the UI are **model estimates** vs the JD — not scores from a commercial ATS.
+- **Agent / house rules** for this repo: **`AGENTS.md`**.
+- **Design docs:** `design.md`, `design-pattern.md`, plus `notion/DESIGN.md` if you use that copy.
+
+---
 
 ## Adding a wizard step
 
-1. Add a route under `app/resume/…` (or extend the flow as needed).
+1. Add or extend a route under `app/resume/…`.
 2. Register the step in **`config/wizard-steps.ts`**.
-3. Wire navigation / guards if you use `useWizardGuard` patterns.
-
-## Notes
-
-- **ATS scores** in the UI are **model estimates** for keyword/structure fit vs the JD — not scores from a commercial ATS product.
-- Repo conventions for agents: see **`AGENTS.md`** (if present).
+3. Align **`config/routes.ts`**, guards (`useWizardGuard`), and **`components/wizard/README.md`**.
+4. Extend **Playwright** coverage for any new user-visible behaviour.

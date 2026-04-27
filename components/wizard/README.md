@@ -1,5 +1,7 @@
 # Wizard Route Notes
 
+Monorepo / stack / CI / env overview: **[`README.md`](../../README.md)** (repository root).
+
 ## Route Location and URL
 - Upload: `/resume/upload`
 - Job: `/resume/job`
