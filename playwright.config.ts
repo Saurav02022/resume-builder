@@ -8,7 +8,9 @@ export default defineConfig({
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 2 : undefined,
+  /** Fewer workers = less Next dev compile thrash; CI already used 2. */
+  workers: 2,
+  expect: { timeout: 20_000 },
   reporter: [["html", { open: "never" }], ["list"]],
   use: {
     baseURL,

@@ -9,11 +9,15 @@ export async function uploadResumeFromText(page: Page, resumeText: string) {
     buffer: Buffer.from(resumeText, "utf8"),
   });
   await page.getByRole("button", { name: "Upload & Continue" }).click();
-  await expect(page).toHaveURL(/\/resume\/job/);
+  await expect(page).toHaveURL(/\/resume\/job/, { timeout: 30_000 });
 }
+
+const REVIEW_HEADING = { name: "Review what changed" } as const;
 
 export async function fillJdAndGenerate(page: Page, jdText: string) {
   await page.getByLabel("Posting text").fill(jdText);
   await page.getByRole("button", { name: /Start Tailoring|Update Tailoring/ }).click();
-  await expect(page.getByRole("heading", { name: "Review what changed" })).toBeVisible();
+  // Next dev + parallel workers: first compile / navigation can exceed default 5s.
+  await page.waitForURL(/\/resume\/review/, { timeout: 35_000 });
+  await expect(page.getByRole("heading", REVIEW_HEADING)).toBeVisible({ timeout: 20_000 });
 }
