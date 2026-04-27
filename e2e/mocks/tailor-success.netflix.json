@@ -1,0 +1,34 @@
+{
+  "comparisonSummary": "Resume tailored for Netflix UI engineer requirements and performance focus.",
+  "atsScores": {
+    "original": {
+      "score": 67,
+      "band": "Moderate fit",
+      "rationale": "Good frontend evidence but limited streaming-scale context."
+    },
+    "tailored": {
+      "score": 85,
+      "band": "Strong fit",
+      "rationale": "Improved narrative around UI resilience and global product quality."
+    },
+    "liftSummary": "Score improved by 18 points through Netflix-specific UI and scale emphasis."
+  },
+  "suggestions": [
+    "Add one line on global user scale.",
+    "Mention monitoring and reliability ownership."
+  ],
+  "issues": [],
+  "fixes": [
+    {
+      "whatChanged": "Expanded performance statements",
+      "why": "Matches Netflix UI role expectations.",
+      "beforeSnippet": "Improved page load times",
+      "afterSnippet": "Reduced critical rendering delay by 30% for high-traffic surfaces."
+    }
+  ],
+  "tailoredTex": "\\documentclass{article}\\begin{document}Netflix tailored resume content\\end{document}",
+  "candidateName": "Saurav Kumar",
+  "targetCompany": "Netflix",
+  "targetRole": "UI Engineer",
+  "targetLocation": "Los Gatos"
+}

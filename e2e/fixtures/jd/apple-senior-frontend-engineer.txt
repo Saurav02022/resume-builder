@@ -1,0 +1,33 @@
+Company: Apple
+Role: Senior Frontend Engineer
+Location: Hyderabad, India
+
+Role Summary:
+Build premium, highly polished web experiences across Apple customer platforms.
+This role requires deep frontend craftsmanship, accessibility excellence,
+and strong ownership of architecture and delivery quality.
+
+What You Will Do:
+- Architect and build React + TypeScript web applications with high UX fidelity.
+- Create and evolve reusable design-system primitives and page-level patterns.
+- Ensure first-class accessibility and internationalization across product surfaces.
+- Collaborate with Product, Design, and Platform teams on roadmap execution.
+- Drive frontend quality through testing strategy, code standards, and mentoring.
+- Investigate production issues and improve reliability and observability.
+
+Minimum Qualifications:
+- 6+ years professional frontend engineering experience.
+- Expert-level JavaScript/TypeScript and modern CSS architecture skills.
+- Strong understanding of accessibility, semantic HTML, and inclusive UX patterns.
+- Experience with performance profiling and optimization for large web apps.
+- Proven track record of mentoring and leading technical design discussions.
+
+Preferred Qualifications:
+- Experience with Next.js, SSR, and progressive enhancement patterns.
+- Experience with feature flagging, staged rollouts, and experimentation.
+- Experience working in cross-functional, product-centric engineering teams.
+
+Success Metrics (First 6 Months):
+- Improve key customer journey performance by 25% without UX regressions.
+- Raise accessibility audit score to WCAG AA compliance across critical pages.
+- Deliver a reusable frontend architecture pattern adopted by multiple teams.

@@ -1,0 +1,33 @@
+Company: Netflix
+Role: UI Engineer
+Location: Remote / APAC
+
+Role Summary:
+Build and optimize high-quality product interfaces for global streaming members.
+You will solve complex UI problems at scale, improve perceived performance,
+and partner with product and backend teams to ship reliable experiences.
+
+What You Will Do:
+- Develop and maintain React + TypeScript interfaces for high-traffic products.
+- Optimize rendering paths, bundle strategy, and client runtime performance.
+- Build resilient component systems used across multiple product teams.
+- Improve developer velocity with better test coverage and tooling.
+- Partner with design teams to preserve visual quality across devices.
+- Use production telemetry to detect and fix regressions early.
+
+Minimum Qualifications:
+- 4+ years of frontend engineering experience in production environments.
+- Strong React, TypeScript, and modern web platform fundamentals.
+- Experience with profiling tools, performance budgets, and monitoring.
+- Experience designing APIs for reusable components and shared UI modules.
+- Experience with automated testing (unit, integration, E2E) in CI.
+
+Preferred Qualifications:
+- Experience with media-heavy or latency-sensitive user interfaces.
+- Experience with experimentation, feature flags, and canary releases.
+- Experience with accessibility best practices across international products.
+
+Success Metrics (First 6 Months):
+- Improve startup/render performance on a core flow by at least 20%.
+- Reduce UI regression incidents in critical journeys by at least 30%.
+- Ship at least one reusable platform-level UI module used by 2+ teams.

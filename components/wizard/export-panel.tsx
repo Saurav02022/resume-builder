@@ -48,11 +48,24 @@ export function ExportPanel({ data, onError }: ExportPanelProps) {
         }),
       });
 
+      const contentType = response.headers.get("Content-Type") || "";
+
       if (!response.ok) {
         const payload = await response.json().catch(() => null);
         const error = payload?.error;
         const details = error?.details ? `\n\n${error.details}` : "";
         throw new Error(`${error?.message || "PDF download failed"}${details}`);
+      }
+
+      // Contract hardening: 200 is not always a valid PDF response.
+      if (contentType.includes("application/json")) {
+        const payload = await response.json().catch(() => null);
+        const error = payload?.error;
+        throw new Error(error?.message || "PDF download failed");
+      }
+
+      if (!contentType.includes("application/pdf")) {
+        throw new Error("Unexpected export response. Expected PDF file.");
       }
 
       const blob = await response.blob();

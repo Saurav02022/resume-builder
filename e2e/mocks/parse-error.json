@@ -1,0 +1,7 @@
+{
+  "success": false,
+  "error": {
+    "code": "PARSE_FAILED",
+    "message": "Unable to extract text from uploaded resume."
+  }
+}

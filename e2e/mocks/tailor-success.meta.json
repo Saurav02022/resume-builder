@@ -1,0 +1,39 @@
+{
+  "comparisonSummary": "Resume aligned for Meta frontend role with stronger product impact wording.",
+  "atsScores": {
+    "original": {
+      "score": 68,
+      "band": "Moderate fit",
+      "rationale": "Good frontend base but weaker product language for Meta scope."
+    },
+    "tailored": {
+      "score": 86,
+      "band": "Strong fit",
+      "rationale": "Improved alignment with React systems, metrics, and cross-functional collaboration."
+    },
+    "liftSummary": "Score improved by 18 points due to stronger Meta-aligned outcomes and responsibilities."
+  },
+  "suggestions": [
+    "Add one bullet about experimentation impact at scale.",
+    "Quantify design-system adoption outcomes."
+  ],
+  "issues": [
+    {
+      "issue": "Limited product KPI mentions",
+      "whyItMatters": "Meta roles prioritize measurable product impact."
+    }
+  ],
+  "fixes": [
+    {
+      "whatChanged": "Strengthened impact bullets",
+      "why": "Shows direct metric-driven ownership.",
+      "beforeSnippet": "Built frontend features",
+      "afterSnippet": "Shipped frontend features that improved engagement by 15%."
+    }
+  ],
+  "tailoredTex": "\\documentclass{article}\\begin{document}Meta tailored resume content\\end{document}",
+  "candidateName": "Saurav Kumar",
+  "targetCompany": "Meta",
+  "targetRole": "Frontend Engineer",
+  "targetLocation": "Menlo Park"
+}

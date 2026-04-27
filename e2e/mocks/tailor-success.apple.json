@@ -1,0 +1,34 @@
+{
+  "comparisonSummary": "Resume tuned for Apple UI quality and accessibility ownership.",
+  "atsScores": {
+    "original": {
+      "score": 66,
+      "band": "Moderate fit",
+      "rationale": "Strong frontend baseline, missing Apple-level quality signaling."
+    },
+    "tailored": {
+      "score": 84,
+      "band": "Strong fit",
+      "rationale": "Improved accessibility, polish, and architecture language."
+    },
+    "liftSummary": "Score improved by 18 points from stronger Apple-focused frontend framing."
+  },
+  "suggestions": [
+    "Highlight accessibility audit ownership.",
+    "Show collaboration with design and platform teams."
+  ],
+  "issues": [],
+  "fixes": [
+    {
+      "whatChanged": "Added accessibility outcomes",
+      "why": "Improves Apple role matching.",
+      "beforeSnippet": "Built UI components",
+      "afterSnippet": "Built accessible UI components with WCAG compliance checks."
+    }
+  ],
+  "tailoredTex": "\\documentclass{article}\\begin{document}Apple tailored resume content\\end{document}",
+  "candidateName": "Saurav Kumar",
+  "targetCompany": "Apple",
+  "targetRole": "Senior Frontend Engineer",
+  "targetLocation": "Cupertino"
+}

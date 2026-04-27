@@ -1,0 +1,33 @@
+Company: Meta
+Role: Frontend Engineer, Product
+Location: Bengaluru, India
+
+Role Summary:
+Join the Product Engineering group to build high-scale user-facing web experiences.
+You will own frontend architecture decisions, partner with product/design/data teams,
+and deliver measurable product impact for millions of users.
+
+What You Will Do:
+- Build reusable React and TypeScript components for complex product surfaces.
+- Lead end-to-end feature delivery from RFC/design review to production rollout.
+- Improve page performance (LCP, INP, CLS) and monitor real user metrics.
+- Define API contracts with backend teams and ship resilient client integrations.
+- Run A/B tests and use experiment outcomes to iterate product UX.
+- Raise engineering quality via code reviews, test strategy, and mentoring.
+
+Minimum Qualifications:
+- 3+ years building production frontend systems with JavaScript/TypeScript.
+- Strong experience with React, state management, and component architecture.
+- Solid understanding of browser rendering pipeline and performance tooling.
+- Experience writing unit, integration, and E2E tests in CI pipelines.
+- Ability to communicate technical tradeoffs to product and design stakeholders.
+
+Preferred Qualifications:
+- Experience with GraphQL and schema-driven frontend development.
+- Experience with accessibility standards (WCAG 2.1 AA) in production systems.
+- Experience with Next.js SSR/streaming patterns and observability dashboards.
+
+Success Metrics (First 6 Months):
+- Ship at least 2 major user-facing features with quality and performance targets met.
+- Reduce key page interaction latency by at least 20%.
+- Improve frontend test reliability and reduce regressions in critical user flows.

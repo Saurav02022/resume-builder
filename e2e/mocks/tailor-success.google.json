@@ -1,0 +1,34 @@
+{
+  "comparisonSummary": "Resume mapped to Google web engineering expectations with stronger architecture and quality language.",
+  "atsScores": {
+    "original": {
+      "score": 69,
+      "band": "Moderate fit",
+      "rationale": "Strong frontend profile, needs stronger architecture and scale articulation."
+    },
+    "tailored": {
+      "score": 88,
+      "band": "Strong fit",
+      "rationale": "Clearer technical depth, quality outcomes, and cross-team collaboration."
+    },
+    "liftSummary": "Score improved by 19 points with better Google-aligned engineering framing."
+  },
+  "suggestions": [
+    "Include one example of debugging complex production issues.",
+    "Add architecture tradeoff decision detail."
+  ],
+  "issues": [],
+  "fixes": [
+    {
+      "whatChanged": "Improved architecture descriptions",
+      "why": "Aligns with Google software engineering depth.",
+      "beforeSnippet": "Built scalable frontend",
+      "afterSnippet": "Designed scalable frontend modules with explicit performance tradeoff decisions."
+    }
+  ],
+  "tailoredTex": "\\documentclass{article}\\begin{document}Google tailored resume content\\end{document}",
+  "candidateName": "Saurav Kumar",
+  "targetCompany": "Google",
+  "targetRole": "Software Engineer Web",
+  "targetLocation": "Bengaluru"
+}

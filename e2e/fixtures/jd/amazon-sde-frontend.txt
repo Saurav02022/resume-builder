@@ -1,0 +1,33 @@
+Company: Amazon
+Role: Software Development Engineer (Frontend)
+Location: Bengaluru, India
+
+Role Summary:
+Own frontend systems for customer-facing and internal Amazon products.
+You will build scalable UI architecture, deliver operationally excellent features,
+and drive measurable business outcomes through data-informed iteration.
+
+What You Will Do:
+- Deliver React/TypeScript features end-to-end with clear ownership.
+- Build maintainable frontend architecture for long-term product velocity.
+- Collaborate with backend teams on API design, error handling, and reliability.
+- Improve operational metrics including latency, availability, and defect rate.
+- Write design docs and influence technical decisions across partner teams.
+- Participate in on-call/production support for critical user experiences.
+
+Minimum Qualifications:
+- 3+ years of software engineering experience with strong frontend focus.
+- Strong JavaScript/TypeScript, React, and browser fundamentals.
+- Experience with testing strategy and CI/CD quality gates.
+- Experience diagnosing production failures and implementing robust fixes.
+- Strong communication and ownership mindset in cross-functional teams.
+
+Preferred Qualifications:
+- Experience with Next.js or SSR architectures at scale.
+- Experience with cloud-native systems and observability tooling.
+- Experience mentoring engineers and leading high-impact projects.
+
+Success Metrics (First 6 Months):
+- Deliver 2+ critical roadmap features with launch quality targets met.
+- Reduce frontend production incidents by at least 25%.
+- Improve page-level performance and reliability on top business journeys.

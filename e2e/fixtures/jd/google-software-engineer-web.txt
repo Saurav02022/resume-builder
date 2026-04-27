@@ -1,0 +1,33 @@
+Company: Google
+Role: Software Engineer, Web
+Location: Bengaluru, India
+
+Role Summary:
+Build performant, scalable, and accessible web products used by global audiences.
+You will contribute to architecture, implementation, and operational excellence
+for critical user workflows and platform capabilities.
+
+What You Will Do:
+- Design and implement robust web features using TypeScript and React.
+- Improve performance across loading, rendering, and interaction quality metrics.
+- Build reusable frontend abstractions and reduce complexity in shared code.
+- Collaborate with Product, UX, and Infrastructure teams on feature direction.
+- Use logs, traces, and user telemetry to debug and improve production quality.
+- Participate in design reviews and establish maintainable engineering patterns.
+
+Minimum Qualifications:
+- Bachelor degree in Computer Science or equivalent practical experience.
+- 3+ years experience in frontend-focused software engineering.
+- Strong fundamentals in JavaScript/TypeScript, web APIs, and browser behavior.
+- Experience with testing, debugging, and performance optimization in production.
+- Experience working with distributed systems-backed product APIs.
+
+Preferred Qualifications:
+- Experience with Next.js, SSR/RSC, and modern rendering strategies.
+- Experience with accessibility and internationalization at scale.
+- Experience leading cross-team technical initiatives.
+
+Success Metrics (First 6 Months):
+- Launch at least 2 high-impact web features with strong reliability.
+- Improve a core user flow metric (latency/error/conversion) by measurable margin.
+- Contribute reusable architecture that lowers implementation cost for other teams.

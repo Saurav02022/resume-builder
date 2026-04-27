@@ -1,0 +1,34 @@
+{
+  "comparisonSummary": "Resume adapted for Amazon ownership-driven frontend engineering scope.",
+  "atsScores": {
+    "original": {
+      "score": 65,
+      "band": "Moderate fit",
+      "rationale": "Relevant skills present but limited ownership and ops language."
+    },
+    "tailored": {
+      "score": 83,
+      "band": "Strong fit",
+      "rationale": "Improved ownership framing, architecture detail, and delivery evidence."
+    },
+    "liftSummary": "Score improved by 18 points with stronger Amazon-style ownership language."
+  },
+  "suggestions": [
+    "Include one on-call or reliability metric.",
+    "Add impact from API and frontend integration ownership."
+  ],
+  "issues": [],
+  "fixes": [
+    {
+      "whatChanged": "Refined ownership language",
+      "why": "Matches Amazon leadership principles expectations.",
+      "beforeSnippet": "Worked on frontend features",
+      "afterSnippet": "Owned frontend feature delivery from design to production monitoring."
+    }
+  ],
+  "tailoredTex": "\\documentclass{article}\\begin{document}Amazon tailored resume content\\end{document}",
+  "candidateName": "Saurav Kumar",
+  "targetCompany": "Amazon",
+  "targetRole": "SDE Frontend",
+  "targetLocation": "Seattle"
+}

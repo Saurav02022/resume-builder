@@ -106,7 +106,7 @@ For every non-trivial task, follow this sequence:
 5. For medium, large, or structural changes, include a brief HLD or LLD
 6. Wait for approval before implementing any non-trivial UI, architecture, data, auth, or multi-file change
 7. Implement in small, reviewable steps
-8. Verify with lint, tests, or focused manual checks when possible
+8. Verify with lint and the Testing Rules section below
 
 **Rules:**
 
@@ -115,6 +115,23 @@ For every non-trivial task, follow this sequence:
 - For very small single-file edits, use judgment, but keep the same structure and standards
 - For larger architecture, auth, database, or UI-system changes, explain the approach before editing
 - Prefer existing repo patterns over abstract best practices when the repo is already coherent
+
+### Testing Rules (Single Source of Truth)
+
+For every feature addition, feature update, or bug fix:
+
+1. Add or update automated tests in the same task
+2. Prefer route-level or feature-level coverage for changed user behavior
+3. Do not treat implementation as complete until relevant tests pass locally
+4. If tests are intentionally not added, document why and the remaining risk
+
+**Rules:**
+
+- New behavior must ship with tests
+- Changed behavior must update existing tests
+- Regressions fixed in code must include regression tests
+- For UI flow changes, prefer E2E coverage for the impacted journey
+- For utility or business-logic changes, prefer unit or integration tests
 
 ### Git Workflow
 
