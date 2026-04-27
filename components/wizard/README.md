@@ -1,6 +1,6 @@
 # Wizard Route Notes
 
-Monorepo / stack / CI / env overview: **[`README.md`](../../README.md)** (repository root).
+Full stack, AI, testing, and DevOps overview: **[`README.md`](../../README.md)** (repository root — architecture diagram, technology matrix, CI gates).
 
 ## Route Location and URL
 - Upload: `/resume/upload`
