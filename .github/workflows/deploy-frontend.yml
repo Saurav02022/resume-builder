@@ -1,20 +1,66 @@
+# Runs only after "E2E Playwright" succeeds on main (same commit is built).
+# Manual override: workflow_dispatch (no E2E gate).
 name: Deploy Frontend (Vercel)
 
 on:
-  push:
+  workflow_run:
+    workflows: ["E2E Playwright"]
+    types:
+      - completed
     branches:
       - main
-    paths-ignore:
-      - 'backend/**'
-      - '.github/workflows/deploy-backend.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-frontend-${{ github.event_name == 'workflow_run' && github.event.workflow_run.head_sha || github.sha }}
+  cancel-in-progress: false
 
 jobs:
+  gate:
+    name: Gate (E2E + paths)
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch' || (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success')
+    outputs:
+      should_deploy: ${{ steps.compute.outputs.should_deploy }}
+      sha: ${{ steps.compute.outputs.sha }}
+    steps:
+      - name: Compute deploy SHA and path match
+        id: compute
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "sha=${{ github.sha }}" >> "$GITHUB_OUTPUT"
+            echo "should_deploy=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          SHA="${{ github.event.workflow_run.head_sha }}"
+          echo "sha=$SHA" >> "$GITHUB_OUTPUT"
+          gh api "repos/${{ github.repository }}/commits/$SHA" --jq '.files[].filename' > changed.txt
+          SHOULD=false
+          while IFS= read -r f || [ -n "$f" ]; do
+            [ -z "$f" ] && continue
+            case "$f" in
+              backend/*|.github/workflows/deploy-backend.yml) ;;
+              *) SHOULD=true ;;
+            esac
+          done < changed.txt
+          echo "should_deploy=$SHOULD" >> "$GITHUB_OUTPUT"
+
   deploy:
     name: Build & Deploy
+    needs: gate
+    if: needs.gate.outputs.should_deploy == 'true'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.gate.outputs.sha }}
 
       - name: Install Vercel CLI
         run: npm install --global vercel@latest
