@@ -1,4 +1,5 @@
 # Runs only after "E2E Playwright" succeeds on main (same commit is built).
+# Playwright covers the Next.js wizard only (API routes mocked in-browser); it does not validate the Python backend.
 # Manual override: workflow_dispatch (no E2E gate).
 name: Deploy Frontend (Vercel)
 
