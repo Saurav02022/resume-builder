@@ -26,6 +26,7 @@ class AtsComparison(BaseModel):
 class RefinedJD(BaseModel):
     role_title: str = Field(description="The formal title of the role (e.g., Senior Software Engineer).")
     company_name: str = Field(description="The name of the company.")
+    location: str = Field(description="Primary location for the role (e.g., Bengaluru, Remote, Hybrid - Berlin). 'Unknown' if absent.")
     core_tech_stack: List[str] = Field(description="Clean list of required languages, frameworks, and tools.")
     is_senior_role: bool = Field(description="Whether the JD implies Senior, Lead, or Staff level responsibility.")
     primary_responsibilities: List[str] = Field(description="High-signal list of what the person actually does (no fluff).")

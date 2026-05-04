@@ -12,6 +12,7 @@ class TailorOrchestrator:
         cleaned_jd_summary = (
             f"Title: {refined_jd.get('role_title')}\n"
             f"Company: {refined_jd.get('company_name')}\n"
+            f"Location: {refined_jd.get('location', 'Unknown')}\n"
             f"Required Tech: {', '.join(refined_jd.get('core_tech_stack', []))}\n"
             f"Core Tasks: {'; '.join(refined_jd.get('primary_responsibilities', []))}\n"
             f"Culture: {', '.join(refined_jd.get('tone_and_culture', []))}"

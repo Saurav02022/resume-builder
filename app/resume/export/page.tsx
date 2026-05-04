@@ -5,6 +5,7 @@ import { useState } from "react";
 import { AlertCircle, ArrowLeft } from "lucide-react";
 
 import { ExportPanel } from "@/components/wizard/export-panel";
+import { TargetMetaRow } from "@/components/wizard/target-meta-row";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { routes } from "@/config/routes";
@@ -35,6 +36,7 @@ export default function ResumeExportPage() {
             Your resume is ready in industry-standard formats. Use the 
             Word (.docx) version for final tweaks or Print to PDF for a production-ready file.
           </p>
+          <TargetMetaRow data={tailorData} />
         </div>
         <Button
           type="button"

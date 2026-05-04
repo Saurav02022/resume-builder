@@ -8,6 +8,7 @@ import {
   ReviewPanel,
   type ReviewSubStep,
 } from "@/components/wizard/review-panel";
+import { TargetMetaRow } from "@/components/wizard/target-meta-row";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { routes } from "@/config/routes";
@@ -70,6 +71,7 @@ function ResumeReviewPageInner() {
             <strong className="font-medium text-foreground">analytics &amp; tips</strong> for
             before/after ATS-style scores and coaching. Export when you are happy.
           </p>
+          <TargetMetaRow data={tailorData} />
         </div>
         <div className="flex flex-wrap gap-2">
           <Button
