@@ -119,7 +119,7 @@ Below is the **stack we actually ship and operate** in this repo — grouped by 
 | **`google-genai` (Python)** | Official Gen AI client; typed calls and schema-backed responses in `backend/app/services/ai/`. |
 | **Structured output / schemas** | Reduces drift; enforced at the service layer with Pydantic. |
 | **Prompt design** | Semantic XML-style tagging and system instructions (see backend prompt modules). |
-| **`@google/generative-ai` (npm)** | Present in the monorepo for TypeScript-side experimentation / helpers (`lib/tailor-resume.ts`); **production traffic** for tailor/parse/download is designed around the **proxied FastAPI** path when the backend is running. |
+| **Next.js → FastAPI proxy** | Tailor / parse / download calls go through `app/api/resume/*` to the Python backend; prompts live server-side only. |
 
 ### Quality engineering & testing
 
