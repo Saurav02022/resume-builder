@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Geist_Mono, Inter } from "next/font/google";
 import "./globals.css";
 
+// No-op: touch file to trigger frontend CI / deploy gate when needed.
+
 /** NotionInter substitute — see `notion/DESIGN.md` §3 Typography (Inter fallbacks). */
 const fontSans = Inter({
   subsets: ["latin"],
