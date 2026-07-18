@@ -86,7 +86,7 @@ backend/app/
     parser.py                   PDF/DOCX text + hyperlink extraction
     pdf_compiler.py             pdflatex subprocess + sanitize_jobname + log trimming
     template.py                 loads the master LaTeX template
-  assets/original-resume.tex    master LaTeX template the architect reuses verbatim
+backend/assets/original-resume.tex   master LaTeX template the architect reuses verbatim
 backend/main.py                 no-op shim (its top comment: exists only to trigger the deploy workflow)
 backend/Dockerfile              TeX Live + uvicorn image for Cloud Run
 
